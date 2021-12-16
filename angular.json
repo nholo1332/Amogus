@@ -108,6 +108,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "amogus:build:production",
+            "firebaseProject": "amogus-ff7c1",
+            "firebaseHostingSite": "amogusgame"
+          }
         }
       }
     }

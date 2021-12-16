@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "amogus-ff7c1": {
+      "hosting": {
+        "amogus": [
+          "amogusgame"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "amogus-ff7c1"
+  }
+}
