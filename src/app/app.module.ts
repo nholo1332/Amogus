@@ -13,12 +13,14 @@ import {AngularFireModule} from '@angular/fire/compat';
 import {AngularFireDatabaseModule} from '@angular/fire/compat/database';
 import {AngularFireAuthModule} from '@angular/fire/compat/auth';
 import { GameComponent } from './views/game/game.component';
+import { CreateComponent } from './views/create/create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     JoinGameComponent,
     GameComponent,
+    CreateComponent,
   ],
   imports: [
     BrowserModule,
