@@ -48,4 +48,15 @@ export class DatabaseProvider {
     });
   }
 
+  public selectQuestions(count: number): Promise<Question[]> {
+    return this.db.ref('questions').once('value').then((data) => {
+      const questions: Question[] = [];
+      data.forEach((child) => {
+        questions.push(new Question().fromJSON(child.val()));
+      });
+      const shuffled = questions.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    });
+  }
+
 }
