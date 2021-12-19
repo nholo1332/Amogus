@@ -32,6 +32,8 @@ export class DatabaseProvider {
         },
       });
     }).then(() => {
+      return this.db.ref('users').child(this.auth.currentUID()).child('ownedGames').child(gameKey).set(true);
+    }).then(() => {
       return gameKey;
     });
   }
