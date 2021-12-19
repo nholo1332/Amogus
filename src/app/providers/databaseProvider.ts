@@ -38,4 +38,11 @@ export class DatabaseProvider {
     });
   }
 
+  public joinGame(key: string): Promise<any> {
+    return this.db.ref('games').child(key).child('players').child(this.auth.currentUID()).set({
+      name: this.auth.userName().firstName,
+      uid: this.auth.currentUID(),
+    });
+  }
+
 }
