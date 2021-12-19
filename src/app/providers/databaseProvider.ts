@@ -3,7 +3,7 @@ import {AngularFireDatabase} from '@angular/fire/compat/database';
 import firebase from 'firebase/compat';
 
 @Injectable()
-export default class DatabaseProvider {
+export class DatabaseProvider {
 
   private db: firebase.database.Database;
 
