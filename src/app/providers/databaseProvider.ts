@@ -1,19 +1,38 @@
 import {Injectable} from '@angular/core';
 import {AngularFireDatabase} from '@angular/fire/compat/database';
 import firebase from 'firebase/compat';
+import {customAlphabet} from 'nanoid/async';
+import {AuthService} from '../services/authServices';
 
 @Injectable()
 export class DatabaseProvider {
 
   private db: firebase.database.Database;
 
-  constructor(private _db: AngularFireDatabase) {
+  constructor(private _db: AngularFireDatabase, private auth: AuthService) {
     this.db = _db.database;
   }
 
   public isGameJoinable(key: string): Promise<boolean> {
     return this.db.ref('games').child(key).once('value').then((data) => {
       return data.exists() && !data.child('started').val();
+    });
+  }
+
+  public createGame(discussionTime: number, peaceBouts: number): Promise<string> {
+    const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 6);
+    let gameKey = '';
+    return nanoid().then((key) => {
+      gameKey = key;
+      return this.db.ref('games').child(key).set({
+        owner: this.auth.currentUID(),
+        settings: {
+          discussionTime: discussionTime,
+          peaceBouts: peaceBouts,
+        },
+      });
+    }).then(() => {
+      return gameKey;
     });
   }
 
