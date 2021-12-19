@@ -27,7 +27,7 @@ export class DatabaseProvider {
       return this.db.ref('games').child(key).set({
         owner: this.auth.currentUID(),
         settings: {
-          discussionTime: discussionTime,
+          discussionTime: discussionTime * 60,
           peaceBouts: peaceBouts,
         },
       });
