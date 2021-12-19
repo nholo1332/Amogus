@@ -15,6 +15,7 @@ import {AngularFireAuthModule} from '@angular/fire/compat/auth';
 import {GameComponent} from './views/game/game.component';
 import {CreateComponent} from './views/create/create.component';
 import {AuthService} from './services/authServices';
+import {GameSubscription} from './providers/gameSubscription';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import {AuthService} from './services/authServices';
     MaterialModule,
     FormsModule,
   ],
-  providers: [DatabaseProvider, AuthService],
+  providers: [DatabaseProvider, AuthService, GameSubscription],
   bootstrap: [AppComponent],
 })
 export class AppModule {
