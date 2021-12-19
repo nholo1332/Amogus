@@ -13,7 +13,9 @@
             </mat-icon>
           </mat-form-field>
           <div>
-            <button mat-stroked-button color="primary" [disabled]="gameKey.length !== 6 || loading">Join</button>
+            <button mat-stroked-button color="primary" [disabled]="gameKey.length !== 6 || loading"
+                    (click)="joinGame()">Join
+            </button>
           </div>
         </mat-card-content>
       </mat-card>
