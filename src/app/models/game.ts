@@ -20,7 +20,6 @@ export default class Game {
     for ( const player in json.players ) {
       game.players.push(new Player().fromJSON(json.players[player]));
     }
-    console.log(game.players);
     return game;
   }
 
