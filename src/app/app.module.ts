@@ -10,6 +10,8 @@ import {getAuth, provideAuth} from '@angular/fire/auth';
 import {getDatabase, provideDatabase} from '@angular/fire/database';
 import {JoinGameComponent} from './views/join-game/join-game.component';
 import {MaterialModule} from '../material.module';
+import {FormsModule} from '@angular/forms';
+import DatabaseProvider from './providers/databaseProvider';
 
 @NgModule({
   declarations: [
@@ -24,8 +26,9 @@ import {MaterialModule} from '../material.module';
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     MaterialModule,
+    FormsModule,
   ],
-  providers: [],
+  providers: [DatabaseProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {
