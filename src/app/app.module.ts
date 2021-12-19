@@ -16,6 +16,7 @@ import {GameComponent} from './views/game/game.component';
 import {CreateComponent} from './views/create/create.component';
 import {AuthService} from './services/authServices';
 import {GameSubscription} from './providers/gameSubscription';
+import { PlayerGameViewComponent } from './components/player-game-view/player-game-view.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import {GameSubscription} from './providers/gameSubscription';
     JoinGameComponent,
     GameComponent,
     CreateComponent,
+    PlayerGameViewComponent,
   ],
   imports: [
     BrowserModule,
