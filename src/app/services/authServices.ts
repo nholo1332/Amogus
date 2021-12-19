@@ -29,6 +29,10 @@ export class AuthService {
     }
   }
 
+  userAvatar(): string {
+    return this.authState !== null ? ( this.authState.photoURL ?? '' ) : '';
+  }
+
   getAuthState() {
     return this.afAuth.authState.pipe(first()).toPromise();
   }

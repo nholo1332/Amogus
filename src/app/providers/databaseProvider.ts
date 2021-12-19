@@ -42,6 +42,7 @@ export class DatabaseProvider {
     return this.db.ref('games').child(key).child('players').child(this.auth.currentUID()).set({
       name: this.auth.userName().firstName,
       uid: this.auth.currentUID(),
+      avatar: this.auth.userAvatar(),
     }).then(() => {
       return this.db.ref('users').child(this.auth.currentUID()).child('currentGame').set(key);
     });
