@@ -1,30 +1,32 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
+import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
-import {environment} from '../environments/environment';
-import {getAuth, provideAuth} from '@angular/fire/auth';
-import {getDatabase, provideDatabase} from '@angular/fire/database';
 import {JoinGameComponent} from './views/join-game/join-game.component';
 import {MaterialModule} from '../material.module';
 import {FormsModule} from '@angular/forms';
-import DatabaseProvider from './providers/databaseProvider';
+import {DatabaseProvider} from './providers/databaseProvider';
+import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireDatabaseModule} from '@angular/fire/compat/database';
+import {AngularFireAuthModule} from '@angular/fire/compat/auth';
+import { GameComponent } from './views/game/game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     JoinGameComponent,
+    GameComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
     MaterialModule,
     FormsModule,
   ],
