@@ -24,3 +24,11 @@ body {
 mat-card {
   border-radius: 10px !important;
 }
+
+.mat-list-item.mat-list-item-word-wrap {
+  height: initial !important;
+  .mat-line {
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+  }
+}
