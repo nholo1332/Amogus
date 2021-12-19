@@ -26,11 +26,11 @@ export class JoinGameComponent implements OnInit {
         this.router.navigate(['game', this.gameKey]);
       } else {
         this.loading = false;
-        this.snackBar.open('Game is not joinable.', 'Ok');
+        this.snackBar.open('El juego no se puede unirse', 'Ok');
       }
     }).catch(() => {
       this.loading = false;
-      this.snackBar.open('Error occurred when checking for game.', 'Ok');
+      this.snackBar.open('Se ha producido un error al comprobar si hay juego.', 'Ok');
     });
   }
 

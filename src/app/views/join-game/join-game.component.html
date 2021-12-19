@@ -3,9 +3,9 @@
     <div class="col-4 my-auto">
       <mat-card class="text-center join-game-card">
         <mat-card-content>
-          <h2>Join Game</h2>
+          <h2>Unirse al Juego</h2>
           <mat-form-field appearance="outline">
-            <mat-label>Game Key</mat-label>
+            <mat-label>Clave del Juego</mat-label>
             <input matInput [(ngModel)]="gameKey" [disabled]="loading">
             <mat-icon matSuffix *ngIf="!loading">sports_esports</mat-icon>
             <mat-icon matSuffix *ngIf="loading">
@@ -14,11 +14,11 @@
           </mat-form-field>
           <div>
             <button mat-stroked-button color="primary" [disabled]="gameKey.length !== 6 || loading"
-                    (click)="joinGame()">Join
+                    (click)="joinGame()">Unirse
             </button>
           </div>
           <div class="create-game-button">
-            <button mat-button color="accent" [disabled]="loading" routerLink="/create">Create</button>
+            <button mat-button color="accent" [disabled]="loading" routerLink="/create">Crear</button>
           </div>
         </mat-card-content>
       </mat-card>
