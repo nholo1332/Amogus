@@ -19,6 +19,12 @@ export class JoinGameComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  formatKey() {
+    if ( !this.gameKey.match(/[a-z]/) ) {
+      this.gameKey = this.gameKey.replace(/[^a-z]/g, '');
+    }
+  }
+
   joinGame() {
     this.loading = true;
     this.db.isGameJoinable(this.gameKey).then((joinable) => {

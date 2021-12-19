@@ -6,7 +6,7 @@
           <h2>Unirse al Juego</h2>
           <mat-form-field appearance="outline">
             <mat-label>Clave del Juego</mat-label>
-            <input matInput [(ngModel)]="gameKey" [disabled]="loading">
+            <input matInput [(ngModel)]="gameKey" [disabled]="loading" (keyup)="formatKey()">
             <mat-icon matSuffix *ngIf="!loading">sports_esports</mat-icon>
             <mat-icon matSuffix *ngIf="loading">
               <mat-spinner color="primary" diameter="25"></mat-spinner>
