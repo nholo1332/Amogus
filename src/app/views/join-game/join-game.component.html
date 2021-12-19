@@ -17,6 +17,9 @@
                     (click)="joinGame()">Join
             </button>
           </div>
+          <div class="create-game-button">
+            <button mat-button color="accent" [disabled]="loading" routerLink="/create">Create</button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
