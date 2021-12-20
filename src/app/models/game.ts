@@ -7,19 +7,21 @@ export default class Game {
   private _owner: string;
   private _settings: Settings;
   private _players: Player[];
-  private _questions: Map<number, string[]>;
+  private _questions: Map<number, Map<number, string>>;
   private _started: boolean;
   private _leaderboard: Map<string, number>;
   private _state: State;
+  private _answers: Map<string, number>;
 
   constructor() {
     this._owner = '';
     this._settings = new Settings();
     this._players = [];
-    this._questions = new Map<number, string[]>();
+    this._questions = new Map<number, Map<number, string>>();
     this._started = false;
     this._leaderboard = new Map<string, number>();
     this._state = new State();
+    this._answers = new Map<string, number>();
   }
 
   fromJSON(json: any): Game {
@@ -37,6 +39,9 @@ export default class Game {
       game.leaderboard.set(key, json.leaderboard[key]);
     });
     game.state = json.state ? new State().fromJSON(json.state) : new State();
+    Object.keys(json.answers ?? []).forEach((key) => {
+      game.answers.set(key, json.answers[key]);
+    });
     return game;
   }
 
@@ -71,11 +76,11 @@ export default class Game {
     this._players = value;
   }
 
-  get questions(): Map<number, string[]> {
+  get questions(): Map<number, Map<number, string>> {
     return this._questions;
   }
 
-  set questions(value: Map<number, string[]>) {
+  set questions(value: Map<number, Map<number, string>>) {
     this._questions = value;
   }
 
@@ -101,6 +106,14 @@ export default class Game {
 
   set state(value: State) {
     this._state = value;
+  }
+
+  get answers(): Map<string, number> {
+    return this._answers;
+  }
+
+  set answers(value: Map<string, number>) {
+    this._answers = value;
   }
 
 }

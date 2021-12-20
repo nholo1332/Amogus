@@ -20,6 +20,14 @@ export default class Question {
     return questionModel;
   }
 
+  fromSafeJSON(json: any): Question {
+    const questionModel: Question = new Question();
+    questionModel.id = json.id ?? '';
+    questionModel.answer = 0;
+    questionModel.question = json.question ? new QuestionContent().fromJSON(json.question) : new QuestionContent();
+    return questionModel;
+  }
+
   get id(): string {
     return this._id;
   }
