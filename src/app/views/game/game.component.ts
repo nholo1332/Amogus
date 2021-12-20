@@ -36,6 +36,8 @@ export class GameComponent implements OnInit {
 
   loading = true;
   startingGame = false;
+  showPlayerRole = false;
+  playerRoleShown = false;
   gameKey = '';
 
   game: Game = new Game();
@@ -79,6 +81,19 @@ export class GameComponent implements OnInit {
               left: chunkedPlayers[0],
               right: chunkedPlayers[1] ?? [],
             };
+          }
+          this.game.players = data.players;
+          if ( data.started && !this.game.started ) {
+            this.game.started = true;
+            setTimeout(() => {
+              this.showPlayerRole = true;
+            }, 900);
+            setTimeout(() => {
+              this.showPlayerRole = false;
+            }, 4800);
+            setTimeout(() => {
+              this.playerRoleShown = true;
+            }, 6500);
           }
           this.game = data;
         }

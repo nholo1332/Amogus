@@ -41,4 +41,7 @@
   </div>
 </div>
 
-<app-player-game-view *ngIf="game.started" [@fadeInOut]=""></app-player-game-view>
+<app-player-role-display *ngIf="showPlayerRole && !playerRoleShown" [@fadeInOut]="" [game]="game"
+                         [user]="user"></app-player-role-display>
+<app-player-game-view *ngIf="game.started && !showPlayerRole && playerRoleShown" [@fadeInOut]="" [game]="game"
+                      [gameKey]="gameKey"></app-player-game-view>
