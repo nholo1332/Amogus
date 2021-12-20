@@ -1,0 +1,38 @@
+.background {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.75)), url('../../../assets/maze-bg-4.png');
+  height: 100%;
+  background-size: cover;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.answer-item {
+  background: white;
+  border-radius: 12px;
+  margin: 12px 0 12px 0;
+  h2 {
+    font-size: 20px;
+  }
+}
+
+.mat-list-item-disabled {
+  background: #dcdcdc !important;
+}
+
+.answer-item:hover {
+  background: #f0f0f0;
+}
+
+.timer-area {
+  min-height: 150px;
+  h1 {
+    color: white;
+    font-size: 36px;
+  }
+  h2 {
+    color: white;
+    font-size: 30px;
+  }
+}
