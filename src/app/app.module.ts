@@ -18,6 +18,7 @@ import {AuthService} from './services/authServices';
 import {GameSubscription} from './providers/gameSubscription';
 import {PlayerGameViewComponent} from './components/player-game-view/player-game-view.component';
 import {PlayerRoleDisplayComponent} from './components/player-role-display/player-role-display.component';
+import HelperFunctions from './providers/helperFunctions';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import {PlayerRoleDisplayComponent} from './components/player-role-display/playe
     MaterialModule,
     FormsModule,
   ],
-  providers: [DatabaseProvider, AuthService, GameSubscription],
+  providers: [DatabaseProvider, AuthService, GameSubscription, HelperFunctions],
   bootstrap: [AppComponent],
 })
 export class AppModule {
