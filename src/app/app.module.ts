@@ -16,7 +16,8 @@ import {GameComponent} from './views/game/game.component';
 import {CreateComponent} from './views/create/create.component';
 import {AuthService} from './services/authServices';
 import {GameSubscription} from './providers/gameSubscription';
-import { PlayerGameViewComponent } from './components/player-game-view/player-game-view.component';
+import {PlayerGameViewComponent} from './components/player-game-view/player-game-view.component';
+import {PlayerRoleDisplayComponent} from './components/player-role-display/player-role-display.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PlayerGameViewComponent } from './components/player-game-view/player-ga
     GameComponent,
     CreateComponent,
     PlayerGameViewComponent,
+    PlayerRoleDisplayComponent,
   ],
   imports: [
     BrowserModule,
