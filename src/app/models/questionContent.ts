@@ -17,6 +17,21 @@ export default class QuestionContent {
     return questionContent;
   }
 
+  toJSON(): object {
+    return {
+      title: this.title,
+      answers: this.convertAnswersToJSON(),
+    };
+  }
+
+  convertAnswersToJSON(): object {
+    const data: any = [];
+    for ( const [key, value] of this.answers.entries() ) {
+      data[key] = value;
+    }
+    return data;
+  }
+
   get title(): string {
     return this._title;
   }

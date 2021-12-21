@@ -19,6 +19,8 @@ import {GameSubscription} from './providers/gameSubscription';
 import {PlayerGameViewComponent} from './components/player-game-view/player-game-view.component';
 import {PlayerRoleDisplayComponent} from './components/player-role-display/player-role-display.component';
 import HelperFunctions from './providers/helperFunctions';
+import {AddQuestionComponent} from './views/add-question/add-question.component';
+import {NgxWigModule} from 'ngx-wig';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import HelperFunctions from './providers/helperFunctions';
     CreateComponent,
     PlayerGameViewComponent,
     PlayerRoleDisplayComponent,
+    AddQuestionComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import HelperFunctions from './providers/helperFunctions';
     AngularFireAuthModule,
     MaterialModule,
     FormsModule,
+    NgxWigModule,
   ],
   providers: [DatabaseProvider, AuthService, GameSubscription, HelperFunctions],
   bootstrap: [AppComponent],

@@ -28,6 +28,13 @@ export default class Question {
     return questionModel;
   }
 
+  toJSON(): object {
+    return {
+      answer: this.answer,
+      question: this.question.toJSON(),
+    };
+  }
+
   get id(): string {
     return this._id;
   }

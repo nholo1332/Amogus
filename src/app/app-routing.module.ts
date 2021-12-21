@@ -3,9 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {JoinGameComponent} from './views/join-game/join-game.component';
 import {GameComponent} from './views/game/game.component';
 import {CreateComponent} from './views/create/create.component';
+import {AddQuestionComponent} from './views/add-question/add-question.component';
 
 const routes: Routes = [
   { path: 'join', component: JoinGameComponent },
+  { path: 'addQuestion', component: AddQuestionComponent },
   { path: 'create', component: CreateComponent },
   { path: 'game/:key', component: GameComponent },
   { path: '', redirectTo: '/join', pathMatch: 'full' },
