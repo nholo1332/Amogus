@@ -189,4 +189,10 @@ export class DatabaseProvider {
     });
   }
 
+  public pushQuestion(question: Question): Promise<void> {
+    return this.db.ref('questions').push(question.toJSON()).then((data) => {
+      return this.db.ref('questions').child(data.key!).child('id').set(data.key);
+    });
+  }
+
 }
