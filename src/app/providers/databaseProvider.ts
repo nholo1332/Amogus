@@ -158,7 +158,7 @@ export class DatabaseProvider {
 
   public vote(player: string, imposterVote: boolean, key: string): Promise<void> {
     if ( imposterVote ) {
-      return this.db.ref('games').child(key).child('imposterVote').set(player);
+      this.db.ref('games').child(key).child('imposterVote').set(player);
     }
     return this.db.ref('games').child(key).child('votes').child(player).transaction((value) => {
       return ( value || 0 ) + 1;
@@ -166,7 +166,7 @@ export class DatabaseProvider {
   }
 
   public removePlayer(player: string, key: string): Promise<void> {
-    return this.db.ref('games').child(key).child('players').child('inGame').set(false);
+    return this.db.ref('games').child(key).child('players').child(player).child('inGame').set(false);
   }
 
   public resetAfterVote(key: string): Promise<void> {
