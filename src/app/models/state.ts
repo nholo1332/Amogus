@@ -7,6 +7,8 @@ export default class State {
   private _currentBout: number;
   private _showAnswers: boolean;
   private _roundReward: number;
+  private _correctAnswer: number;
+  private _roundWinner: boolean;
 
   constructor() {
     this._round = 0;
@@ -16,6 +18,8 @@ export default class State {
     this._currentBout = 0;
     this._showAnswers = false;
     this._roundReward = 0;
+    this._correctAnswer = -1;
+    this._roundWinner = false;
   }
 
   fromJSON(json: any): State {
@@ -27,6 +31,8 @@ export default class State {
     state.currentBout = json.currentBout ?? 0;
     state.showAnswers = json.showAnswers ?? false;
     state.roundReward = json.roundReward ?? 0;
+    state.correctAnswer = json.correctAnswer ?? -1;
+    state.roundWinner = json.roundWinner ?? false;
     return state;
   }
 
@@ -39,6 +45,8 @@ export default class State {
       currentBout: this.currentBout,
       showAnswers: this.showAnswers,
       roundReward: this.roundReward,
+      correctAnswer: this.correctAnswer,
+      roundWinner: this.roundWinner,
     };
   }
 
@@ -96,6 +104,22 @@ export default class State {
 
   set roundReward(value: number) {
     this._roundReward = value;
+  }
+
+  get correctAnswer(): number {
+    return this._correctAnswer;
+  }
+
+  set correctAnswer(value: number) {
+    this._correctAnswer = value;
+  }
+
+  get roundWinner(): boolean {
+    return this._roundWinner;
+  }
+
+  set roundWinner(value: boolean) {
+    this._roundWinner = value;
   }
 
 }

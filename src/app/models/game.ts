@@ -11,7 +11,9 @@ export default class Game {
   private _started: boolean;
   private _leaderboard: Map<string, number>;
   private _state: State;
-  private _answers: Map<string, number>;
+  private _answers: Map<number, number>;
+  private _votes: Map<string, number>;
+  private _imposterVote: string;
 
   constructor() {
     this._owner = '';
@@ -21,7 +23,9 @@ export default class Game {
     this._started = false;
     this._leaderboard = new Map<string, number>();
     this._state = new State();
-    this._answers = new Map<string, number>();
+    this._answers = new Map<number, number>();
+    this._votes = new Map<string, number>();
+    this._imposterVote = '';
   }
 
   fromJSON(json: any): Game {
@@ -40,8 +44,12 @@ export default class Game {
     });
     game.state = json.state ? new State().fromJSON(json.state) : new State();
     Object.keys(json.answers ?? []).forEach((key) => {
-      game.answers.set(key, json.answers[key]);
+      game.answers.set(Number(key), json.answers[key]);
     });
+    Object.keys(json.votes ?? []).forEach((key) => {
+      game.votes.set(key, json.votes[key]);
+    });
+    game.imposterVote = json.imposterVote ?? '';
     return game;
   }
 
@@ -108,12 +116,28 @@ export default class Game {
     this._state = value;
   }
 
-  get answers(): Map<string, number> {
+  get answers(): Map<number, number> {
     return this._answers;
   }
 
-  set answers(value: Map<string, number>) {
+  set answers(value: Map<number, number>) {
     this._answers = value;
+  }
+
+  get votes(): Map<string, number> {
+    return this._votes;
+  }
+
+  set votes(value: Map<string, number>) {
+    this._votes = value;
+  }
+
+  get imposterVote(): string {
+    return this._imposterVote;
+  }
+
+  set imposterVote(value: string) {
+    this._imposterVote = value;
   }
 
 }
