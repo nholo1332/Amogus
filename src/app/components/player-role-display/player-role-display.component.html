@@ -1,0 +1,8 @@
+<div class="container-fluid player-role-background">
+  <div class="row vh-100 justify-content-center">
+    <div class="col-6 my-auto text-center">
+      <h1 class="imposter" *ngIf="isImposter && showText" [@fadeInOut]="">El Imposter</h1>
+      <h1 class="player" *ngIf="!isImposter && showText" [@fadeInOut]="">Un Jugador</h1>
+    </div>
+  </div>
+</div>

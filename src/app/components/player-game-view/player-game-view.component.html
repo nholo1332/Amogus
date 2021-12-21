@@ -1,0 +1,75 @@
+<div class="container-fluid background" [@fadeInOut]="">
+  <div class="row vh-100 justify-content-center">
+    <mat-toolbar color="primary" [@fadeInOut]="">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-4 text-center">
+            <h2>{{ name }}</h2>
+          </div>
+          <div class="col-4 text-center">
+            <h2>Recompensa Redonda</h2>
+            <h2>${{ game.state.roundReward }}</h2>
+          </div>
+          <div class="col-4 text-center">
+            <h2>Mi Banco</h2>
+            <h2>${{ getMyPoints() }}</h2>
+          </div>
+        </div>
+      </div>
+    </mat-toolbar>
+    <div class="col-8">
+      <div class="timer-area text-center">
+        <h2
+          *ngIf="game.state.discussionTimeRemaining !== game.settings.discussionTime"
+          [@fadeInOut]="">{{ getTimerTitle() }}</h2>
+        <h1 *ngIf="game.state.discussionTimeRemaining !== game.settings.discussionTime"
+            [@fadeInOut]="">{{ getTime() }}</h1>
+        <button mat-stroked-button
+                *ngIf="game.state.discussionTimeRemaining !== game.settings.discussionTime && game.state.discussionTimeRemaining >= 5 && isOwner"
+                (click)="skipDiscussion()" color="primary">
+          Omitir Discusión
+        </button>
+      </div>
+      <mat-card
+        *ngIf="game.state.currentBout !== 0 && currentRoundQuestions.length !== 0 && currentRoundQuestions[game.state.currentBout - 1] !== undefined && !game.state.canVote && !game.state.roundWinner"
+        [@fadeInOut]="">
+        <mat-card-content class="text-center">
+          <h1>{{ currentRoundQuestions[game.state.currentBout - 1].question.title }}</h1>
+        </mat-card-content>
+      </mat-card>
+      <mat-action-list
+        *ngIf="currentRoundQuestions[game.state.currentBout - 1] !== undefined && game.state.showAnswers && inGame() && !game.state.canVote"
+        [@fadeInOut]="">
+        <mat-list-item
+          *ngFor="let answer of currentRoundQuestions[game.state.currentBout - 1].question.answers | keyvalue"
+          class="answer-item" [disabled]="!game.state.canAnswer || answeredQuestion"
+          (click)="answerQuestion(answer.key)" [ngClass]="getAnswerClass(answer.key)">
+          <h2 mat-line>{{ answer.value }}</h2>
+          <mat-icon *ngIf="isImposter && currentRoundQuestions[game.state.currentBout - 1].answer === answer.key">
+            check
+          </mat-icon>
+        </mat-list-item>
+      </mat-action-list>
+      <mat-card *ngIf="game.state.canVote" [@fadeInOut]="">
+        <mat-action-list [disabled]="voted">
+          <mat-list-item *ngFor="let player of playersInGame" class="answer-item" (click)="voteUser(player.uid)"
+                         [ngClass]="selectedVote === player.uid ? 'my-answer' : ''">
+            <img mat-list-avatar [src]="player.avatar">
+            <h1 mat-line class="player-name">{{ player.name }}</h1>
+          </mat-list-item>
+        </mat-action-list>
+      </mat-card>
+      <mat-card *ngIf="game.state.roundWinner" [@fadeInOut]="">
+        <mat-list>
+          <mat-card-header>
+            <mat-card-title>Los Ganadores</mat-card-title>
+          </mat-card-header>
+          <mat-list-item *ngFor="let player of getWinners()" class="answer-item">
+            <img mat-list-avatar [src]="player.avatar">
+            <h1 mat-line class="player-name">{{ player.name }}</h1>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+    </div>
+  </div>
+</div>

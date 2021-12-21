@@ -1,0 +1,23 @@
+.background {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)), url('../../../assets/maze-bg-4.png');
+  height: 100%;
+  background-size: cover;
+}
+
+.create-game-card {
+  width: 100%;
+}
+
+.discussion-time-selector {
+  min-width: 200px;
+  mat-slider {
+    width: 80%;
+  }
+  h4 {
+    display: inline-block;
+  }
+}
+
+.create-game {
+  margin-top: 20px;
+}

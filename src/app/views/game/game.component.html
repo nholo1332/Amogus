@@ -1,0 +1,48 @@
+<div class="container-fluid background" *ngIf="!game.started" [@fadeInOut]="">
+  <div class="row vh-100 justify-content-center">
+    <div class="col-6 my-auto">
+      <mat-card class="create-game-card">
+        <mat-card-title>El Juego - {{ gameKey }}</mat-card-title>
+        <mat-card-content *ngIf="loading">
+          <mat-spinner color="primary" diameter="40"></mat-spinner>
+        </mat-card-content>
+        <mat-card-content *ngIf="!loading">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-6">
+                <mat-list>
+                  <mat-list-item *ngFor="let player of players.left">
+                    <img mat-list-avatar [src]="player.avatar">
+                    <h1 mat-line class="player-name">{{ player.name }}</h1>
+                  </mat-list-item>
+                </mat-list>
+              </div>
+              <div class="col-6">
+                <mat-list>
+                  <mat-list-item *ngFor="let player of players.right">
+                    <img mat-list-avatar [src]="player.avatar">
+                    <h1 mat-line class="player-name">{{ player.name }}</h1>
+                  </mat-list-item>
+                </mat-list>
+              </div>
+            </div>
+          </div>
+          <div class="text-center" *ngIf="game.owner === user!.uid">
+            <button mat-raised-button color="primary" (click)="startGame()"
+                    [disabled]="startingGame || game.players.length < 3">
+              ¡Empieza!
+              <mat-icon *ngIf="startingGame">
+                <mat-spinner diameter="25" color="primary"></mat-spinner>
+              </mat-icon>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<app-player-role-display *ngIf="showPlayerRole && !playerRoleShown" [@fadeInOut]="" [game]="game"
+                         [user]="user"></app-player-role-display>
+<app-player-game-view *ngIf="game.started && !showPlayerRole && playerRoleShown" [@fadeInOut]="" [game]="game"
+                      [gameKey]="gameKey"></app-player-game-view>
