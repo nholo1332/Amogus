@@ -69,6 +69,7 @@ export class DatabaseProvider {
     }, {});
     game.state.round = 1;
     game.state.discussionTimeRemaining = game.settings.discussionTime;
+    console.log(Math.floor(Math.random() * game.players.length));
     let imposter: string = game.players[Math.floor(Math.random() * game.players.length)].uid;
     return this.db.ref('games').child(key).child('players').child(imposter).child('imposter').set(true).then(() => {
       return this.db.ref('games').child(key).update({
@@ -128,6 +129,63 @@ export class DatabaseProvider {
   public answerQuestion(answer: number, key: string): Promise<void> {
     return this.db.ref('games').child(key).child('answers').child(answer.toString()).transaction((value) => {
       return ( value || 0 ) + 1;
+    });
+  }
+
+  public revealCorrectAnswer(correctAnswer: number, key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('state').child('correctAnswer').set(correctAnswer);
+  }
+
+  public increaseReward(key: string): Promise<any> {
+    return this.db.ref('games').child(key).child('state').child('roundReward').transaction((value) => {
+      return ( value || 0 ) + 10000;
+    });
+  }
+
+  public resetData(key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('state').update({
+      showAnswers: false,
+      canAnswer: false,
+      correctAnswer: -1,
+    }).then(() => {
+      return this.db.ref('games').child(key).child('answers').remove();
+    });
+  }
+
+  public enableVoting(key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('state').child('canVote').set(true);
+  }
+
+  public vote(player: string, imposterVote: boolean, key: string): Promise<void> {
+    if ( imposterVote ) {
+      return this.db.ref('games').child(key).child('imposterVote').set(player);
+    }
+    return this.db.ref('games').child(key).child('votes').child(player).transaction((value) => {
+      return ( value || 0 ) + 1;
+    });
+  }
+
+  public removePlayer(player: string, key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('players').child('inGame').set(false);
+  }
+
+  public resetAfterVote(key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('state').update({
+      canVote: false,
+    }).then(() => {
+      return this.db.ref('games').child(key).child('imposterVote').remove();
+    }).then(() => {
+      return this.db.ref('games').child(key).child('votes').remove();
+    });
+  }
+
+  public setRoundWinner(winners: string[], amount: number, key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('state').child('roundWinner').set(true).then(() => {
+      return winners.forEach((uid) => {
+        return this.db.ref('games').child(key).child('leaderboard').child(uid).transaction((value) => {
+          return ( value || 0 ) + amount;
+        });
+      });
     });
   }
 
