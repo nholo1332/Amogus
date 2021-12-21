@@ -64,9 +64,11 @@
           <mat-card-header>
             <mat-card-title>Los Ganadores</mat-card-title>
           </mat-card-header>
-          <mat-list-item *ngFor="let player of getWinners()" class="answer-item">
+          <mat-list-item *ngFor="let player of getWinners()" class="answer-item"
+                         [ngClass]="player.imposter ? 'wrong-answer' : 'correct-answer'">
             <img mat-list-avatar [src]="player.avatar">
             <h1 mat-line class="player-name">{{ player.name }}</h1>
+            <h3 mat-line class="player-name">{{ player.imposter ? 'El Imposter' : 'Un Jugador' }}</h3>
           </mat-list-item>
         </mat-list>
       </mat-card>
