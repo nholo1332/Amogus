@@ -69,7 +69,6 @@ export class DatabaseProvider {
     }, {});
     game.state.round = 1;
     game.state.discussionTimeRemaining = game.settings.discussionTime;
-    console.log(Math.floor(Math.random() * game.players.length));
     let imposter: string = game.players[Math.floor(Math.random() * game.players.length)].uid;
     return this.db.ref('games').child(key).child('players').child(imposter).child('imposter').set(true).then(() => {
       return this.db.ref('games').child(key).update({
