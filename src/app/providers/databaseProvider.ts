@@ -229,4 +229,8 @@ export class DatabaseProvider {
     });
   }
 
+  public toggleRankingsDisplay(display: boolean, gameKey: string): Promise<void> {
+    return this.db.ref('games').child(gameKey).child('state').child('displayRankings').set(display);
+  }
+
 }
