@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import Game from '../../models/game';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {AuthService} from '../../services/authServices';
@@ -7,6 +7,7 @@ import Question from '../../models/question';
 import HelperFunctions from '../../providers/helperFunctions';
 import Player from '../../models/player';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ActionNotifications} from '../../models/actionNotifications';
 
 @Component({
   selector: 'app-player-game-view',
@@ -52,6 +53,8 @@ export class PlayerGameViewComponent implements OnInit {
   voted = false;
   selectedVote = '';
 
+  @Output() actionNotifier = new EventEmitter();
+
   constructor(private auth: AuthService, private db: DatabaseProvider, private helperFunctions: HelperFunctions,
               private snackBar: MatSnackBar) {
   }
@@ -76,7 +79,9 @@ export class PlayerGameViewComponent implements OnInit {
       }, 1200);
     }
     if ( this.lastRound < this.game.state.round ) {
-      this.currentRoundQuestions = this.db.getRoundQuestions(1, this.game, this.isOwner || this.isImposter);
+      this.currentRoundQuestions = this.db.getRoundQuestions(this.game.state.round, this.game, this.isOwner || this.isImposter);
+      this.isImposter = ( this.game.players.find((player) => player.imposter) ?? new Player() ).uid === this.auth.currentUID();
+      this.lastRound = 0;
     }
     this.lastRound = this.game.state.round;
     if ( this.lastBout < this.game.state.currentBout && this.isOwner ) {
@@ -276,6 +281,20 @@ export class PlayerGameViewComponent implements OnInit {
     }).then(() => {
       return this.db.resetAfterVote(this.gameKey);
     });
+  }
+
+  startNewRound() {
+    this.lastRound = this.game.state.round;
+    this.lastBout = 0;
+    this.discussionTime = 1;
+    this.allAnswered = false;
+    this.answeredQuestion = false;
+    this.selectedAnswer = -1;
+    this.allVoted = false;
+    this.playersInGame = [];
+    this.voted = false;
+    this.selectedVote = '';
+    this.actionNotifier.emit(ActionNotifications.startNewRound);
   }
 
 }
