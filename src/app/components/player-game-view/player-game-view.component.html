@@ -71,6 +71,10 @@
             <h3 mat-line class="player-name">{{ player.imposter ? 'El Imposter' : 'Un Jugador' }}</h3>
           </mat-list-item>
         </mat-list>
+        <mat-card-actions align="end" *ngIf="isOwner">
+          <button mat-stroked-button>Finalizar el Juego</button>
+          <button mat-stroked-button (click)="startNewRound()">Próxima Ronda</button>
+        </mat-card-actions>
       </mat-card>
     </div>
   </div>
