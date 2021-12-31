@@ -135,7 +135,7 @@ export class GameComponent implements OnInit {
     this.game.settings.bouts = this.game.settings.peaceBouts + ( this.game.players.length - 2 );
     this.db.selectQuestions(this.game.settings.bouts, this.usedQuestions).then((selectedQuestions) => {
       this.currentRoundQuestion = selectedQuestions;
-      this.usedQuestions.concat(selectedQuestions);
+      this.usedQuestions = this.usedQuestions.concat(selectedQuestions);
       return this.db.setupGame(selectedQuestions, this.game, this.gameKey);
     });
   }
@@ -158,7 +158,7 @@ export class GameComponent implements OnInit {
       this.game.settings.bouts = this.game.settings.peaceBouts + ( this.game.players.length - 2 );
       this.db.selectQuestions(this.game.settings.bouts, this.usedQuestions).then((selectedQuestions) => {
         this.currentRoundQuestion = selectedQuestions;
-        this.usedQuestions.concat(selectedQuestions);
+        this.usedQuestions = this.usedQuestions.concat(selectedQuestions);
         return this.db.setupNewRound(selectedQuestions, this.game, this.gameKey);
       });
     });
