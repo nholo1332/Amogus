@@ -72,7 +72,7 @@
           </mat-list-item>
         </mat-list>
         <mat-card-actions align="end" *ngIf="isOwner">
-          <button mat-stroked-button>Finalizar el Juego</button>
+          <button mat-stroked-button (click)="displayFinalRankings()">Las Clasificaciones de Juego</button>
           <button mat-stroked-button (click)="startNewRound()">Próxima Ronda</button>
         </mat-card-actions>
       </mat-card>

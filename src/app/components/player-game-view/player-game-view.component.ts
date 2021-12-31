@@ -8,6 +8,8 @@ import HelperFunctions from '../../providers/helperFunctions';
 import Player from '../../models/player';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActionNotifications} from '../../models/actionNotifications';
+import {MatDialog, MatDialogRef, MatDialogState} from '@angular/material/dialog';
+import {RankingsDisplayDialogComponent} from '../../dialog/rankings-display-dialog/rankings-display-dialog.component';
 
 @Component({
   selector: 'app-player-game-view',
@@ -55,8 +57,10 @@ export class PlayerGameViewComponent implements OnInit {
 
   @Output() actionNotifier = new EventEmitter();
 
+  rankingsDialog: MatDialogRef<RankingsDisplayDialogComponent> | undefined = undefined;
+
   constructor(private auth: AuthService, private db: DatabaseProvider, private helperFunctions: HelperFunctions,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private matDialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -108,6 +112,11 @@ export class PlayerGameViewComponent implements OnInit {
         votes += value;
       }
       this.allVoted = this.playersInGame.length === votes;
+    }
+    if ( this.game.state.displayRankings && !this.isOwner ) {
+      this.openRankingsDisplay();
+    } else if ( !this.game.state.displayRankings && this.rankingsDialog !== undefined && !this.isOwner ) {
+      this.rankingsDialog.close();
     }
     /*if ( ( changes as any ).game.currentValue !== undefined ) {
       this.game = ( changes as any ).game.currentValue as Game;
@@ -165,16 +174,20 @@ export class PlayerGameViewComponent implements OnInit {
   }
 
   answerQuestion(answer: number) {
-    this.db.answerQuestion(answer, this.gameKey).then(() => {
-      this.answeredQuestion = true;
-      this.selectedAnswer = answer;
+    this.answeredQuestion = true;
+    this.selectedAnswer = answer;
+    this.db.answerQuestion(answer, this.gameKey).catch(() => {
+      this.answeredQuestion = false;
+      this.selectedAnswer = -1;
     });
   }
 
   voteUser(uid: string) {
-    this.db.vote(uid, this.isImposter && this.game.state.currentBout < this.game.settings.bouts, this.gameKey).then(() => {
-      this.selectedVote = uid;
-      this.voted = true;
+    this.selectedVote = uid;
+    this.voted = true;
+    this.db.vote(uid, this.isImposter && this.game.state.currentBout < this.game.settings.bouts, this.gameKey).catch(() => {
+      this.selectedVote = '';
+      this.voted = false;
     });
   }
 
@@ -295,6 +308,24 @@ export class PlayerGameViewComponent implements OnInit {
     this.voted = false;
     this.selectedVote = '';
     this.actionNotifier.emit(ActionNotifications.startNewRound);
+  }
+
+  displayFinalRankings() {
+    // Show dialog to allow closing out (only for owner) if players decide to play another round
+    // Also emit event to database to display dialog without close option on player devices
+    this.db.toggleRankingsDisplay(true, this.gameKey).then(() => {
+      this.openRankingsDisplay();
+    });
+  }
+
+  openRankingsDisplay() {
+    if ( this.rankingsDialog !== undefined && this.rankingsDialog.getState() === MatDialogState.CLOSED ) {
+      this.rankingsDialog = this.matDialog.open(RankingsDisplayDialogComponent, {
+        width: '90%',
+        maxWidth: 450,
+        data: this.game,
+      });
+    }
   }
 
 }
