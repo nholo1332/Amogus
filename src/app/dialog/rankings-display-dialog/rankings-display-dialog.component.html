@@ -1,1 +1,17 @@
-<p>rankings-display-dialog works!</p>
+<h1 mat-dialog-title>Las Clasificaciones de Juego</h1>
+<div mat-dialog-content>
+  <p>Resultados del juego. Las clasificaciones se basan en el banco del jugador.</p>
+  <mat-list>
+    <mat-list-item *ngFor="let player of players; index as i">
+      <mat-icon mat-list-icon *ngIf="i <= 2">{{ getPlacing(i) }}</mat-icon>
+      <h1 mat-list-icon *ngIf="i > 2">{{ i + 1 }}</h1>
+      <h1 mat-line>{{ player.name }}</h1>
+      <h2 mat-line>{{ data.game.leaderboard.get(player.uid) }}</h2>
+    </mat-list-item>
+  </mat-list>
+  <p *ngIf="data.isOwner">Como propietario, puede cerrar el juego ahora o hacer clic en el botón de abajo y seleccionar
+    Próxima Ronda.</p>
+</div>
+<div mat-dialog-actions *ngIf="data.isOwner">
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Nueva Ronda</button>
+</div>
