@@ -323,8 +323,17 @@ export class PlayerGameViewComponent implements OnInit {
       this.rankingsDialog = this.matDialog.open(RankingsDisplayDialogComponent, {
         width: '90%',
         maxWidth: 450,
-        data: this.game,
+        data: {
+          game: this.game,
+          isOwner: this.isOwner,
+        },
       });
+
+      if ( this.isOwner ) {
+        this.rankingsDialog.afterClosed().subscribe(() => {
+          this.db.toggleRankingsDisplay(false, this.gameKey);
+        });
+      }
     }
   }
 
