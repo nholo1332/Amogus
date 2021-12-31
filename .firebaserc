@@ -1,4 +1,7 @@
 {
+  "projects": {
+    "default": "amogus-ff7c1"
+  },
   "targets": {
     "amogus-ff7c1": {
       "hosting": {
@@ -7,8 +10,5 @@
         ]
       }
     }
-  },
-  "projects": {
-    "default": "amogus-ff7c1"
   }
 }

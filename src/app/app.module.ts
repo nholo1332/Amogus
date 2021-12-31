@@ -21,6 +21,7 @@ import {PlayerRoleDisplayComponent} from './components/player-role-display/playe
 import HelperFunctions from './providers/helperFunctions';
 import {AddQuestionComponent} from './views/add-question/add-question.component';
 import {NgxWigModule} from 'ngx-wig';
+import { RankingsDisplayDialogComponent } from './dialog/rankings-display-dialog/rankings-display-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {NgxWigModule} from 'ngx-wig';
     PlayerGameViewComponent,
     PlayerRoleDisplayComponent,
     AddQuestionComponent,
+    RankingsDisplayDialogComponent,
   ],
   imports: [
     BrowserModule,

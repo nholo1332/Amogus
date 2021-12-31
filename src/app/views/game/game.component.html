@@ -45,4 +45,4 @@
 <app-player-role-display *ngIf="showPlayerRole && !playerRoleShown" [@fadeInOut]="" [game]="game"
                          [user]="user"></app-player-role-display>
 <app-player-game-view *ngIf="game.started && !showPlayerRole && playerRoleShown" [@fadeInOut]="" [game]="game"
-                      [gameKey]="gameKey"></app-player-game-view>
+                      [gameKey]="gameKey" (actionNotifier)="eventEmitParser($event)"></app-player-game-view>

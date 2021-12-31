@@ -9,6 +9,8 @@ import Player from '../../models/player';
 import firebase from 'firebase/compat';
 import Question from '../../models/question';
 import {animate, style, transition, trigger} from '@angular/animations';
+import HelperFunctions from '../../providers/helperFunctions';
+import {ActionNotifications} from '../../models/actionNotifications';
 import User = firebase.User;
 
 interface PlayerList {
@@ -45,9 +47,11 @@ export class GameComponent implements OnInit {
   user: User | undefined = undefined;
 
   currentRoundQuestion: Question[] = [];
+  usedQuestions: Question[] = [];
 
   constructor(private route: ActivatedRoute, private db: DatabaseProvider, private router: Router,
-              private snackBar: MatSnackBar, private auth: AuthService, private gameSubscription: GameSubscription) {
+              private snackBar: MatSnackBar, private auth: AuthService, private gameSubscription: GameSubscription,
+              private helperFunctions: HelperFunctions) {
     this.gameKey = route.snapshot.paramMap.get('key') ?? '';
     db.isGameJoinable(this.gameKey).then((joinable) => {
       if ( joinable ) {
@@ -71,6 +75,11 @@ export class GameComponent implements OnInit {
       this.loading = false;
       gameSubscription.subscribe(this.gameKey, (data) => {
         if ( data instanceof Game ) {
+          if ( this.game.state.round < data.state.round || !data.started ) {
+            this.showPlayerRole = false;
+            this.playerRoleShown = false;
+            this.game.started = false;
+          }
           if ( this.game.players.length !== data.players.length ) {
             let chunkedPlayers: any[] = [];
             let playersCopy: Player[] = data.players.slice(0);
@@ -124,9 +133,34 @@ export class GameComponent implements OnInit {
       this.game.settings.peaceBouts = this.game.settings.peaceBouts <= ( 5 - ( this.game.players.length - 2 ) ) ? ( 5 - ( this.game.players.length - 2 ) ) : this.game.settings.peaceBouts;
     }
     this.game.settings.bouts = this.game.settings.peaceBouts + ( this.game.players.length - 2 );
-    this.db.selectQuestions(this.game.settings.bouts).then((selectedQuestions) => {
+    this.db.selectQuestions(this.game.settings.bouts, this.usedQuestions).then((selectedQuestions) => {
       this.currentRoundQuestion = selectedQuestions;
+      this.usedQuestions = this.usedQuestions.concat(selectedQuestions);
       return this.db.setupGame(selectedQuestions, this.game, this.gameKey);
+    });
+  }
+
+  eventEmitParser(event: string) {
+    if ( event === ActionNotifications.startNewRound ) {
+      this.startNewRound();
+    }
+  }
+
+  startNewRound() {
+    this.db.updateGameStarted(false, this.gameKey).then(() => {
+      return this.helperFunctions.awaitTime(2300);
+    }).then(() => {
+      if ( this.game.players.length >= 6 ) {
+        this.game.settings.peaceBouts = this.game.settings.peaceBouts;
+      } else if ( this.game.players.length < 6 ) {
+        this.game.settings.peaceBouts = this.game.settings.peaceBouts <= ( 5 - ( this.game.players.length - 2 ) ) ? ( 5 - ( this.game.players.length - 2 ) ) : this.game.settings.peaceBouts;
+      }
+      this.game.settings.bouts = this.game.settings.peaceBouts + ( this.game.players.length - 2 );
+      this.db.selectQuestions(this.game.settings.bouts, this.usedQuestions).then((selectedQuestions) => {
+        this.currentRoundQuestion = selectedQuestions;
+        this.usedQuestions = this.usedQuestions.concat(selectedQuestions);
+        return this.db.setupNewRound(selectedQuestions, this.game, this.gameKey);
+      });
     });
   }
 
