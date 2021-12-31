@@ -319,10 +319,11 @@ export class PlayerGameViewComponent implements OnInit {
   }
 
   openRankingsDisplay() {
-    if ( this.rankingsDialog !== undefined && this.rankingsDialog.getState() === MatDialogState.CLOSED ) {
+    if ( this.rankingsDialog === undefined || this.rankingsDialog.getState() === MatDialogState.CLOSED ) {
       this.rankingsDialog = this.matDialog.open(RankingsDisplayDialogComponent, {
         width: '90%',
         maxWidth: 450,
+        disableClose: true,
         data: {
           game: this.game,
           isOwner: this.isOwner,
