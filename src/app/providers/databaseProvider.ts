@@ -5,6 +5,7 @@ import {customAlphabet} from 'nanoid/async';
 import {AuthService} from '../services/authServices';
 import Question from '../models/question';
 import Game from '../models/game';
+import State from '../models/state';
 
 @Injectable()
 export class DatabaseProvider {
@@ -26,15 +27,15 @@ export class DatabaseProvider {
     let gameKey = '';
     return nanoid().then((key) => {
       gameKey = key;
-      return this.db.ref('games').child(key).set({
+      return this.db.ref('users').child(this.auth.currentUID()).child('ownedGames').child(gameKey).set(true);
+    }).then(() => {
+      return this.db.ref('games').child(gameKey).set({
         owner: this.auth.currentUID(),
         settings: {
           discussionTime: discussionTime * 60,
           peaceBouts: peaceBouts,
         },
       });
-    }).then(() => {
-      return this.db.ref('users').child(this.auth.currentUID()).child('ownedGames').child(gameKey).set(true);
     }).then(() => {
       return gameKey;
     });
@@ -50,11 +51,14 @@ export class DatabaseProvider {
     });
   }
 
-  public selectQuestions(count: number): Promise<Question[]> {
+  public selectQuestions(count: number, existingQuestions: Question[]): Promise<Question[]> {
     return this.db.ref('questions').once('value').then((data) => {
       const questions: Question[] = [];
       data.forEach((child) => {
-        questions.push(new Question().fromJSON(child.val()));
+        const newQuestion: Question = new Question().fromJSON(child.val());
+        if ( existingQuestions.findIndex((question) => question.id === newQuestion.id) === -1 ) {
+          questions.push(newQuestion);
+        }
       });
       const shuffled = questions.sort(() => 0.5 - Math.random());
       return shuffled.slice(0, count);
@@ -81,6 +85,35 @@ export class DatabaseProvider {
         state: game.state.toJSON(),
       });
     });
+  }
+
+  public setupNewRound(questions: Question[], game: Game, key: string): Promise<void> {
+    const ids: string[] = questions.map((question) => question.id);
+    const gameRound = game.state.round;
+    game.state = new State();
+    let dbPlayers: any = [];
+    let imposter: string = game.players[Math.floor(Math.random() * game.players.length)].uid;
+    game.players.forEach((player) => {
+      player.imposter = player.uid === imposter;
+      player.inGame = true;
+      dbPlayers[player.uid] = player.toJSON();
+    });
+    game.state.round = gameRound + 1;
+    game.state.discussionTimeRemaining = game.settings.discussionTime;
+
+    return this.db.ref('games').child(key).child('questions').child(String(game.state.round)).set(ids).then(() => {
+      return this.db.ref('games').child(key).child('players').set(dbPlayers);
+    }).then(() => {
+      return this.db.ref('games').child(key).update({
+        settings: game.settings.toJSON(),
+        started: true,
+        state: game.state.toJSON(),
+      });
+    });
+  }
+
+  public updateGameStarted(started: boolean, key: string): Promise<void> {
+    return this.db.ref('games').child(key).child('started').set(started);
   }
 
   public updateBout(bout: number, key: string): Promise<void> {
@@ -185,6 +218,8 @@ export class DatabaseProvider {
           return ( value || 0 ) + amount;
         });
       });
+    }).then(() => {
+      return this.db.ref('games').child(key).child('state').child('roundReward').set(0);
     });
   }
 
