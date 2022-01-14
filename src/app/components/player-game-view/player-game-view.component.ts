@@ -59,6 +59,9 @@ export class PlayerGameViewComponent implements OnInit {
 
   rankingsDialog: MatDialogRef<RankingsDisplayDialogComponent> | undefined = undefined;
 
+  lastNumberOfInGamePlayers = 0;
+  votedOutPlayers: string[] = [];
+
   constructor(private auth: AuthService, private db: DatabaseProvider, private helperFunctions: HelperFunctions,
               private snackBar: MatSnackBar, private matDialog: MatDialog) {
   }
@@ -76,6 +79,8 @@ export class PlayerGameViewComponent implements OnInit {
       this.isOwner = this.game.owner === this.auth.currentUID();
       this.isImposter = ( this.game.players.find((player) => player.imposter) ?? new Player() ).uid === this.auth.currentUID();
       this.lastRound = 0;
+      this.lastNumberOfInGamePlayers = this.game.players.filter((player) => player.inGame).length;
+      this.votedOutPlayers = [];
     }
     if ( this.game.state.currentBout === 0 && this.isOwner ) {
       setTimeout(() => {
@@ -122,6 +127,15 @@ export class PlayerGameViewComponent implements OnInit {
       this.game = ( changes as any ).game.currentValue as Game;
       console.log(this.game.state.discussionTimeRemaining);
     }*/
+    if ( this.lastNumberOfInGamePlayers > this.game.players.filter((player) => player.inGame).length && !this.isOwner ) {
+      const playersInGameLastRound = this.game.players.filter((player) => this.votedOutPlayers.includes(player.uid));
+      const votedOutPlayer = ( playersInGameLastRound.find((player) => !player.inGame) ?? new Player() );
+      this.votedOutPlayers.push(votedOutPlayer.uid);
+      this.snackBar.open('¡' + votedOutPlayer.name + ' ha sido votado fuera!', '', {
+        duration: 2500,
+      });
+    }
+    this.lastNumberOfInGamePlayers = this.game.players.filter((player) => player.inGame).length;
   }
 
   inGame(): boolean {
