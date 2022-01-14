@@ -16,9 +16,20 @@ export class DatabaseProvider {
     this.db = _db.database;
   }
 
-  public isGameJoinable(key: string): Promise<boolean> {
+  public getGame(key: string): Promise<Game> {
     return this.db.ref('games').child(key).once('value').then((data) => {
-      return data.exists() && ( data.child('owner').val() === this.auth.currentUID() || !data.child('started').val() );
+      if ( data.exists() ) {
+        return new Game().fromJSON(data.val());
+      } else {
+        throw new Error('Not found');
+      }
+    });
+  }
+
+  public isGameJoinable(key: string): Promise<boolean> {
+    return this.getGame(key).then((game) => {
+      const uid = this.auth.currentUID() ?? '';
+      return game.owner === uid || !game.started || game.players.findIndex((player) => player.uid === uid) !== -1;
     });
   }
 
@@ -42,12 +53,25 @@ export class DatabaseProvider {
   }
 
   public joinGame(key: string): Promise<any> {
-    return this.db.ref('games').child(key).child('players').child(this.auth.currentUID()).set({
-      name: this.auth.userName().firstName,
-      uid: this.auth.currentUID(),
-      avatar: this.auth.userAvatar(),
-    }).then(() => {
-      return this.db.ref('users').child(this.auth.currentUID()).child('currentGame').set(key);
+    return this.getGame(key).then((game) => {
+      const uid = this.auth.currentUID() ?? '';
+      if ( game.started ) {
+        return this.db.ref('games').child(key).child('players').child(uid).update({
+          name: this.auth.userName().firstName,
+          uid: uid,
+          avatar: this.auth.userAvatar(),
+        }).then(() => {
+          return this.db.ref('users').child(uid).child('currentGame').set(key);
+        });
+      } else {
+        return this.db.ref('games').child(key).child('players').child(uid).set({
+          name: this.auth.userName().firstName,
+          uid: uid,
+          avatar: this.auth.userAvatar(),
+        }).then(() => {
+          return this.db.ref('users').child(uid).child('currentGame').set(key);
+        });
+      }
     });
   }
 
