@@ -3,6 +3,7 @@ import {AuthService} from '../../services/authServices';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DatabaseProvider} from '../../providers/databaseProvider';
 import {Router} from '@angular/router';
+import Settings from '../../models/settings';
 
 @Component({
   selector: 'app-create',
@@ -15,8 +16,7 @@ export class CreateComponent implements OnInit {
   signedIn = false;
   creatingGame = false;
 
-  discussionTime = 3;
-  peaceBouts = 1;
+  gameSettings: Settings = new Settings();
 
   constructor(private auth: AuthService, private snackBar: MatSnackBar, private db: DatabaseProvider,
               private router: Router) {
@@ -44,7 +44,7 @@ export class CreateComponent implements OnInit {
 
   createGame() {
     this.creatingGame = true;
-    this.db.createGame(this.discussionTime, this.peaceBouts).then((key) => {
+    this.db.createGame(this.gameSettings).then((key) => {
       this.router.navigate(['/game', key]);
     }).catch(() => {
       this.creatingGame = false;

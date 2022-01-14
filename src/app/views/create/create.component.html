@@ -12,9 +12,9 @@
               <h3 mat-line><strong>Tiempo de Discusión</strong></h3>
               <p mat-line>Este es el tiempo permitido para discutir preguntas.</p>
               <div class="discussion-time-selector text-center">
-                <mat-slider aria-label="unit(s)" [(ngModel)]="discussionTime" min="0.5" max="5" step="0.5"
+                <mat-slider aria-label="unit(s)" [(ngModel)]="gameSettings.discussionTime" min="0.5" max="5" step="0.5"
                             thumbLabel [disabled]="creatingGame"></mat-slider>
-                <h4>{{ discussionTime }}m</h4>
+                <h4>{{ gameSettings.discussionTime }}m</h4>
               </div>
             </mat-list-item>
             <mat-list-item class="mat-list-item-word-wrap">
@@ -22,9 +22,16 @@
               <p mat-line>El número mínimo de tandas iniciales sin votación. Con menos jugadores o por un juego más
                 largo, seleccione un número más alto.</p>
               <div class="discussion-time-selector text-center">
-                <mat-slider aria-label="unit(s)" [(ngModel)]="peaceBouts" min="1" max="4" step="1"
+                <mat-slider aria-label="unit(s)" [(ngModel)]="gameSettings.peaceBouts" min="1" max="4" step="1"
                             thumbLabel [disabled]="creatingGame"></mat-slider>
-                <h4>{{ peaceBouts }}</h4>
+                <h4>{{ gameSettings.peaceBouts }}</h4>
+              </div>
+            </mat-list-item>
+            <mat-list-item class="mat-list-item-word-wrap">
+              <h3 mat-line><strong>Mostrar respuestas</strong></h3>
+              <p mat-line>Muestre la respuesta correcta después de que todos hayan respondido.</p>
+              <div class="discussion-time-selector text-center">
+                <mat-slide-toggle [(ngModel)]="gameSettings.displayAnswers"></mat-slide-toggle>
               </div>
             </mat-list-item>
           </mat-list>

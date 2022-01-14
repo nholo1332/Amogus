@@ -6,6 +6,7 @@ import {AuthService} from '../services/authServices';
 import Question from '../models/question';
 import Game from '../models/game';
 import State from '../models/state';
+import Settings from '../models/settings';
 
 @Injectable()
 export class DatabaseProvider {
@@ -33,7 +34,7 @@ export class DatabaseProvider {
     });
   }
 
-  public createGame(discussionTime: number, peaceBouts: number): Promise<string> {
+  public createGame(settings: Settings): Promise<string> {
     const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 6);
     let gameKey = '';
     return nanoid().then((key) => {
@@ -43,8 +44,9 @@ export class DatabaseProvider {
       return this.db.ref('games').child(gameKey).set({
         owner: this.auth.currentUID(),
         settings: {
-          discussionTime: discussionTime * 60,
-          peaceBouts: peaceBouts,
+          discussionTime: settings.discussionTime * 60,
+          peaceBouts: settings.peaceBouts,
+          displayAnswers: settings.displayAnswers,
         },
       });
     }).then(() => {
